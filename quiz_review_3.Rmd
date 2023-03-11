@@ -1,0 +1,157 @@
+---
+title: "Quiz_review_3"
+author: |
+  | Xingyu Chen
+date: "`r format(Sys.time(), '%B %d, %Y')`"  
+output:
+  pdf_document:
+    fig_caption: yes
+    toc_depth: 2
+    df_print: kable
+    highlight: tango
+fontsize: 12pt
+geometry: margin=1in
+---
+
+## Spark - lecture 15  
+
+Spark is a big data tool, useful for distributing datasets and computations, prefer to store data in memory. Designed for iterative, interactive, and streaming queries. Rich APIs for Scala, Python, and Java.
+
+Iterative Jobs: for ml app, we have to make multiple passes over the data like logistic regression or alternating least squares. 
+
+Interactive Queries: An analyst wants to run a query and get results back in a reasonable timeframe. MapReduce takes a while to read and write. You can interact with Spark 
+
+Steaming Queries: using microbatches to ensure correctness of results.  
+
+RDDs: Resilient distributed datasets. An immutable collection of partitioned data. Can be created from stored data or other RDDs. The Rdd is an abstraction that address a bunch of more specialized use cases. A superset of MapReduce.  
+
+
+Transformations: define data manipulations—things like filtering, selecting, joining.  
+
+Actions: run the plan, materialize the data. writing the data, printing the data, counting the data, etc.   
+
+
+\newpage
+
+## Search - lecture 16  
+Flexibility— You can control most, if not all, aspects of the process.  
+
+Cost of development— Even when buying a commercial solution, you need to integrate it, which requires a lot of work.  
+
+Who knows your content better than you?— Most shrink-wrap solutions make assumptions about your content that may not be appropriate.  
+
+Price— No license fees.  
+
+Search Concepts: 
+- Indexing— Files, websites, and database records are processed to make them searchable. Indexed files are called documents.
+
+- User input— Users enter their information need through some form of user interface.  
+
+- Ranking— The search engine compares the query to the documents in the index and ranks documents according to how closely they match the query.  
+
+- Results display— The big payoff for the user: the final results are displayed via a user interface, whether it’s at the command prompt, in a browser, or on a mobile phone.  
+
+
+Indexing:
+- Indexing is the search engine process of making one or more documents searchable.  
+
+- In order to make a document searchable, the indexing process must analyze the content of the document.  
+
+- Document analysis usually consists of splitting the document up into tokens and, optionally, making one or more changes to each token to create a normalized token, called a term.  
+
+- Changes applied to tokens to produce terms may include stemming, downcasing, or complete removal.  
+
+- Applications are usually responsible for making the decision on what changes to apply.  
+
+
+Analysis Techniques:   
+
+Tokenization: Process of breaking up a string into tokens to be indexed. Proper, consistent handling of punctuation, numbers, and other symbols is important. For instance, tokenizing microprocessor might mean outputting several tokens (micro, processor, and microprocessor) so that user queries for variations are more likely to succeed.  
+
+Downcasing: All words are converted to lowercase, making it easy to do case-insensitive search.  
+
+Stemming: Strips words of suffixes, and so on.  
+
+Stopword removal: Remove commonly occurring words like the, and, and a that occur in most documents. Originally done to save space in the index, but some newer search engines no longer remove stopwords since they can help in more advanced queries.  
+
+Synonym expansion: For each token, synonyms are looked up in a thesaurus and added to the index. This is often done on the query terms instead of the index terms, since updates to the synonym list can be accounted for dynamically at query time without the need to re-index.  
+
+Inverted Index: After terms have been extracted from the document, usually they’re stored in a data structure, called an inverted index, that’s optimized to quickly find the documents that contain a term.  
+
+Position: 
+- Many search engines go beyond simple term-to-document indexing and store the position of the terms in the document as well.  
+
+- This makes it easier to do phrase and other more advanced queries where position information is needed to calculate whether two or more terms are near each other.  
+
+- The inverted index data structure maps terms to the documents they occur in, enabling fast lookup of query terms in a search engine.  
+
+- The left side represents a sampling of the vocabulary in the documents and the right side represents the documents. The inverted index tracks where terms occur in documents.  
+
+Relevance: 
+- In addition to storing the term to document relationships, the indexing process often calculates and stores information about the importance of the terms in relation to other terms in the document.   
+
+- This calculation of importance plays a vital role in the engine’s ability to make the leap from a simple Boolean matching model (does the term exist in the document or not?) to a ranking model that can return documents deemed more relevant ahead of those that are less relevant.  
+
+- The ability to rank documents by relevance is a huge leap forward when it comes to dealing with large quantities of information, as it allows users to focus in on only highly relevant content.  
+
+- By calculating as much of this information as possible during indexing, the engine can enable fast lookup and ranking during search time.  
+
+User Inputs: 
+Over the years, the query capabilities of search engines have steadily grown, allowing users to input complex queries using
+- Phrases
+- wildcards
+- regular expressions
+- and even natural language entries.
+Additionally, many general-purpose search engines utilize a set of operators like AND, OR, NOT, quotes for phrases, and so forth that allow for the creation of complex queries to narrow results.  
+
+Query Types and Operators:   
+
+Keyword: Each term is a separate lookup in the index. dog programming baseball  
+
+Phrase: Terms must occur next to each other, or at least within some user-specified distance. Double quotes are usually used to mark the beginning and end of the phrase. "President of the United States" "Manning Publications" "Minnesota Wild Hockey" "big, brown, shoe"  
+
+Boolean operators:  AND, OR, and NOT are often used to join two or more keywords together. AND indicates both terms must be present for a match; OR says at least one must be present. NOT means the following term can't be present for a match.
+Parentheses often can be used to control scope and provide nesting capabilities. Many search engines implicitly use AND or OR if no operator is specified in a multiterm query. franks AND beans boxers OR briefs (("Abraham Lincoln" AND "Civil War") NOT ("Gettysburg Address")  
+
+Wildcard and regular expression:  Search terms can contain wildcard operators (? and *) or full-blown regular expressions. These query types usually consume more CPU resources than simpler queries.
+- bank?-Find any word starting with bank and ending with any character: banks.
+bank* -Find any word starting with bank and ending with any number of characters: banks, banker.
+- aa.*k-Matches words starting with aa containing any character in between followed by a k: aardvark.
+
+Structured: Structured queries rely on the structure of the indexed document to be searched. Common structures in documents include title, date published, author, uniform resource locator (URL), user ratings, and so on.  
+
+Date range: -Find all documents between two dates.  
+
+Similar documents:  Given one or more already found documents, find other documents that are similar to the chosen documents. Sometimes called relevance feedback or more like this. Google used to provide a Similar Pages link for most results. Clicking automatically generated a query from the chosen document and searched the index with the new query.  
+
+Guided search: Guided search, or faceted browsing, is an increasingly popular mechanism that provides users with suggestions to refine their query through guaranteed valid categories. Amazon.com uses faceted browsing to allow searchers to restrict by price range, manufacturer, and other queries. Facet counts show how many entries are in each category.
+
+Query Processing: 
+After submission to the search engine, query tokens are normally processed using the same analysis that index tokens go through in order to produce similar transformations from tokens to terms.
+For example, if tokens are stemmed in the index, then query tokens should also be stemmed.
+Many search engines also choose to do synonym expansion at query time.
+Synonym expansion is an analysis technique where each token is looked up in a user-defined thesaurus. If a match occurs, then new tokens, representing the synonyms, are added into the list of tokens.
+
+Ranking Documents Vector Space Model:  
+The vector space model, first introduced in 1975 (Salton $1975)$, is an algebraic model that maps the terms in a document into an $\mathrm{n}$-dimensional linear space.
+
+Imagine you have a set of documents with a restricted language and thus can only contain the words hockey or cycling.
+Now imagine plotting these documents on a two-
+dimensional graph, with hockey as the vertical axis and cycling as the horizontal axis.
+Then, a document with both words present could be represented by an arrow (a vector, or termvector) at a 45-degree angle between the two axes.
+
+N-Demensions:  
+In the real world, search engines work with a very high number of dimensions ( $n$ is often greater than 1 million) and so the simple model presented by the two-document example must be altered both for storage and quality reasons.
+
+For storage, search engines only store the presence of a term, not its absence-hence the inverted index data structure.
+
+Weighting:
+For quality, instead of simply storing a 1 indicating the presence of a word, most engines store some type of weight that's intended to capture the importance of that term relative to all the other terms.
+In math terms, you're scaling the vector.
+In this manner, you can start to see that if you compare the terms in a query to the terms, and their weights, in the documents that contain the query terms, you could produce a formula as to how relevant a document is to a query, which we'll come back to in a moment.  
+
+TF-IDF:
+Though many different weighting schemes are available, the most common is often called the term frequency-inverse document frequency model, or TF-IDF for short.
+The essential insight of the TF-IDF model is that terms that occur frequently in a document (TF) relative to the number of times they occur in the overall collection (IDF) are more important than terms that commonly occur in a large number of documents.
+Think of TF and IDF as the yin and yang of search, each one balancing the other. For instance, the is a common word in most English text, giving it a very high document frequency (or small IDF), resulting in a very small contribution of any occurrence to the overall weight when scoring documents.
+At the opposite end of the spectrum, a word that occurs multiple times in a document (has a high TF value), while rarely occurring in the rest of the collection, is a valuable word and will contribute significantly to the weight assigned the document in question given a query with that term.
